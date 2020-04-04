@@ -93,3 +93,7 @@ main = do
     print $ inside (Circle (1, 1) 6) (Circle (0, 0) 1) == False
     print $ inside (Circle (1, 1) 6) (Circle (1, 1) 6) == True
     print $ inside (Rect (1, 1) 3 4) (Rect (0, 0) 5 6) == True
+    print $ inside (Circle (1, 1) 4) (Rect (0, 0) 2 2) == False
+    print $ inside (Circle (1, 1) 1) (Rect (0, 0) 2 2) == True
+    print $ inside (Rect (0, 0) 1 1) (Circle (0, 0) 8) == True
+    print $ inside (Rect (0, 0) 1 1) (Circle (0, 0) 1) == False
