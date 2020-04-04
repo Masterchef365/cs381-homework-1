@@ -47,6 +47,11 @@ isbag [] _ = []
 isbag _ [] = []
 isbag b (x:xs) = inter x b ++ isbag b xs
 
+-- Length
+size :: Bag a -> Int
+size [] = 0
+size ((_,i):xs) = i + size xs
+
 test_bag = [(5,1),(7,3),(2,1),(3,2),(8,1)]
 
 main = do
@@ -80,3 +85,10 @@ main = do
     print $ isbag [(5,2),(7,3),(2,1),(8,1)] [(5,1),(99,1)] == [(5,1)]
     print $ isbag [(1, 1)] [] == []
     print $ isbag [] [(1, 1)] == []
+
+    print "Size"
+    print $ size [] == 0
+    print $ size [(1, 1)] == 1
+    print $ size [(1, 8)] == 8
+    print $ size [(1, 3),(2,7)] == 10
+    print $ size test_bag == 8
