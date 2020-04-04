@@ -6,7 +6,9 @@ type Bag a = [(a,Int)]
 
 ins :: Eq a => a -> Bag a -> Bag a
 ins v [] = [(v, 1)]
-ins v (x@(a, b):xs) = if fst x == v then (a, succ b) : xs else x : ins v xs
+ins v (x@(a, b):xs)
+    | fst x == v = (a, succ b) : xs 
+    | otherwise = x : ins v xs
 
 bag = [(5,1),(7,3),(2,1),(3,2),(8,1)]
 
