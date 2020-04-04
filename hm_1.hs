@@ -30,11 +30,22 @@ checkbag v@(v_a, v_i) ((x_a, x_i):xs)
     | x_a == v_a && v_i <= x_i = True 
     | otherwise = checkbag v xs
 
---
+-- Check if the first bag is a sub-bag of the second bag
 subbag :: Eq a => Bag a -> Bag a -> Bool
 subbag [] _ = True
 subbag (x:xs) b = checkbag x b && subbag xs b
---subbag (x:xs) b = checkbag x b || subbag xs b
+
+inter :: Eq a => (a, Int) -> Bag a -> [(a, Int)]
+inter _ [] = []
+inter v@(v_a, v_i) ((x_a, x_i):xs)
+    | x_a == v_a = [(v_a, min v_i x_i)]
+    | otherwise = inter v xs
+
+-- Intersection 
+isbag :: Eq a => Bag a -> Bag a -> Bag a
+isbag [] _ = []
+isbag _ [] = []
+isbag b (x:xs) = inter x b ++ isbag b xs
 
 test_bag = [(5,1),(7,3),(2,1),(3,2),(8,1)]
 
@@ -50,13 +61,13 @@ main = do
     print $ del 2 test_bag == [(5,1),(7,3),(3,2),(8,1)]
 
     print "Creation:"
-    print $ bag [2, 3, 3, 5, 7, 7, 7, 8] == [(8,1),(7,3),(5,1),(3,2),(2,1)]
+    print $ bag [2,3,3,5,7,7,7,8] == [(8,1),(7,3),(5,1),(3,2),(2,1)]
     print $ bag [7,3,8,7,3,2,7,5] == [(5,1),(7,3),(2,1),(3,2),(8,1)]
 
     print "Check:"
-    print $ checkbag (5, 3) test_bag == False
-    print $ checkbag (3, 1) test_bag == True
-    print $ checkbag (99, 1) test_bag == False
+    print $ checkbag (5,3) test_bag == False
+    print $ checkbag (3,1) test_bag == True
+    print $ checkbag (99,1) test_bag == False
 
     print "Sub:"
     print $ subbag [(5,1),(7,5),(2,1),(3,2),(8,1)] test_bag == False
@@ -64,3 +75,8 @@ main = do
     print $ subbag [(5,1),(7,3),(2,1),(8,1)] test_bag == True
     print $ subbag test_bag [(5,1),(7,3),(2,1),(8,1)] == False
     print $ subbag test_bag test_bag == True
+
+    print "IsBag"
+    print $ isbag [(5,2),(7,3),(2,1),(8,1)] [(5,1),(99,1)] == [(5,1)]
+    print $ isbag [(1, 1)] [] == []
+    print $ isbag [] [(1, 1)] == []
