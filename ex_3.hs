@@ -55,11 +55,11 @@ alignLeft f = map zeroMinX f
 
 inside :: Shape -> Shape -> Bool
 -- Inside rectangles
-inside a@(Pt (x, y)) b@(Rect (rx, ry) w h) = x >= rx && y >= ry && x <= rx + w && y <= ry + h
+inside (Pt (x, y)) (Rect (rx, ry) w h) = x >= rx && y >= ry && x <= rx + w && y <= ry + h
 inside a@(Circle _ _) b@(Rect _ _ _) = inside (intoRect $ bbox a) b
 inside (Rect a@(ax, ay) w h) r@(Rect _ _ _) = inside (Pt a) r && inside (Pt (ax + w, ay + h)) r
 -- Inside circles
-inside a@(Rect (x, y) w h) c@(Circle _ _) = inside (Pt (x, y)) c && inside (Pt (x + w, y + h)) c && inside (Pt (x + w, y)) c && inside (Pt (x, y + h)) c
+inside (Rect (x, y) w h) c@(Circle _ _) = inside (Pt (x, y)) c && inside (Pt (x + w, y + h)) c && inside (Pt (x + w, y)) c && inside (Pt (x, y + h)) c
 inside (Circle (ax, ay) ar) (Circle (bx, by) br) = ((ax - bx) ^ 2) + ((ay - by) ^ 2) <= ((br ^ 2) - (ar ^ 2))
 inside (Pt p) b@(Circle (_, _) _) = inside (Circle p 0) b
 -- Inside points
