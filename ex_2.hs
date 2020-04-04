@@ -32,6 +32,9 @@ detach n (x@(v, e):xs)
     | v == n || e == n = detach n xs
     | otherwise = x : detach n xs
 
+cyc :: Int -> Graph
+cyc n = (n, 1) : [(x, succ x) | x <- [1,2..pred n]]
+
 main = do
     print "Nodes"
     print $ nodes g == [1,2,3,4]
@@ -45,3 +48,6 @@ main = do
     print "Detach"
     print $ detach 3 g == [(1,2),(2,4)]
     print $ detach 2 h == [(1,3),(4,4)]
+
+    print "Cyc"
+    print $ cyc 4 == [(4,1),(1,2),(2,3),(3,4)]
