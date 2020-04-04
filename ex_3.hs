@@ -24,6 +24,12 @@ bbox (Circle (x, y) r) = ((x - r, y - r), (x + r, y + r))
 bbox (Rect (x, y) w h) = ((x, y), (x + w, y + h))
 bbox (Pt (x, y)) = ((x, y), (x, y))
 
+-- Calculate the minimum x coordinate of a shape
+minX :: Shape -> Number
+minX (Circle (x, y) r) = x - r
+minX (Rect (x, y) w h) = x
+minX (Pt (x, y)) = x
+
 
 f = [Pt (4,4), Circle (5,5) 3, Rect (3,3) 7 2]
 
@@ -33,3 +39,6 @@ main = do
 
     print "BBox"
     print $ map bbox f == [((4,4),(4,4)),((2,2),(8,8)),((3,3),(10,5))]
+
+    print "MinX"
+    print $ map minX f == [4,2,3]
