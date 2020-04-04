@@ -6,7 +6,7 @@ type Length = Number
 data Shape = Pt Point
     | Circle Point Length -- (x, y), r
     | Rect Point Length Length -- (x, y), w, h
-    deriving Show
+    deriving (Eq, Show)
 
 type Figure = [Shape]
 
@@ -46,9 +46,25 @@ zeroMinX (Circle (_, y) r) = Circle (r, y) r
 zeroMinX (Rect (_, y) w h) = Rect (0, y) w h
 zeroMinX (Pt (_, y)) = Pt (0, y)
 
+intoRect :: BBox -> Shape
+intoRect ((ax, ay), (bx, by)) = (Rect (ax, ay) (bx - ax) (by - ay))
+
 -- Align all figures so that their X minXs are the same  
 alignLeft :: Figure -> Figure
 alignLeft f = map zeroMinX f
+
+inside :: Shape -> Shape -> Bool
+-- Inside rectangles
+inside a@(Pt (x, y)) b@(Rect (rx, ry) w h) = x >= rx && y >= ry && x <= rx + w && y <= ry + h
+inside a@(Circle _ _) b@(Rect _ _ _) = inside (intoRect $ bbox a) b
+inside (Rect a@(ax, ay) w h) r@(Rect _ _ _) = inside (Pt a) r && inside (Pt (ax + w, ay + h)) r
+-- Inside circles
+inside a@(Rect (x, y) w h) c@(Circle _ _) = inside (Pt (x, y)) c && inside (Pt (x + w, y + h)) c && inside (Pt (x + w, y)) c && inside (Pt (x, y + h)) c
+inside (Circle (ax, ay) ar) (Circle (bx, by) br) = ((ax - bx) ^ 2) + ((ay - by) ^ 2) <= ((br ^ 2) - (ar ^ 2))
+inside (Pt p) b@(Circle (_, _) _) = inside (Circle p 0) b
+-- Inside points
+inside s b@(Pt _) = inside (intoRect $ bbox s) (intoRect $ bbox b)
+
 
 f = [Pt (4,4), Circle (5,5) 3, Rect (3,3) 7 2]
 
@@ -67,3 +83,13 @@ main = do
 
     print "AlignLeft"
     print $ map minX (alignLeft f) == [0, 0, 0]
+
+    print "Inside"
+    print $ inside (Pt (1, 1)) (Pt (1, 1)) == True
+    print $ inside (Pt (1, 2)) (Pt (1, 1)) == False
+    print $ inside (Pt (1, 2)) (Rect (1, 1) 5 6) == True
+    print $ inside (Rect (1, 1) 5 6) (Pt (1, 2)) == False
+    print $ inside (Circle (1, 1) 1) (Circle (0, 0) 6) == True
+    print $ inside (Circle (1, 1) 6) (Circle (0, 0) 1) == False
+    print $ inside (Circle (1, 1) 6) (Circle (1, 1) 6) == True
+    print $ inside (Rect (1, 1) 3 4) (Rect (0, 0) 5 6) == True
