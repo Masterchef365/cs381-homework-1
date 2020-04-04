@@ -40,29 +40,27 @@ test_bag = [(5,1),(7,3),(2,1),(3,2),(8,1)]
 
 main = do
     print "Insertion:"
-    print $ ins 99 test_bag 
-    print $ ins 3 test_bag 
-    print $ ins 1 test_bag 
-    print $ ins 7 $ ins 8 test_bag 
+    print $ ins 99 test_bag == [(5,1),(7,3),(2,1),(3,2),(8,1),(99,1)]
+    print $ ins 3 test_bag == [(5,1),(7,3),(2,1),(3,3),(8,1)]
+    print $ (ins 7 $ ins 8 test_bag) == [(5,1),(7,4),(2,1),(3,2),(8,2)]
 
     print "Deletion:"
-    print $ del 99 test_bag 
-    print $ del 3 test_bag 
-    print $ del 1 test_bag 
-    print $ del 2 test_bag 
+    print $ del 99 test_bag == test_bag
+    print $ del 3 test_bag == [(5,1),(7,3),(2,1),(3,1),(8,1)]
+    print $ del 2 test_bag == [(5,1),(7,3),(3,2),(8,1)]
 
     print "Creation:"
-    print $ bag [2, 3, 3, 5, 7, 7, 7, 8]
-    print $ bag [7,3,8,7,3,2,7,5]
+    print $ bag [2, 3, 3, 5, 7, 7, 7, 8] == [(8,1),(7,3),(5,1),(3,2),(2,1)]
+    print $ bag [7,3,8,7,3,2,7,5] == [(5,1),(7,3),(2,1),(3,2),(8,1)]
 
     print "Check:"
-    print $ checkbag (5, 3) test_bag 
-    print $ checkbag (3, 1) test_bag 
-    print $ checkbag (99, 1) test_bag 
+    print $ checkbag (5, 3) test_bag == False
+    print $ checkbag (3, 1) test_bag == True
+    print $ checkbag (99, 1) test_bag == False
 
     print "Sub:"
-    print $ subbag [(5,1),(7,5),(2,1),(3,2),(8,1)] test_bag 
-    print $ subbag [(5,1),(7,1),(2,1),(3,1),(8,1)] test_bag 
-    print $ subbag [(5,1),(7,3),(2,1),(8,1)] test_bag 
-    print $ subbag test_bag [(5,1),(7,3),(2,1),(8,1)]
-    print $ subbag test_bag test_bag 
+    print $ subbag [(5,1),(7,5),(2,1),(3,2),(8,1)] test_bag == False
+    print $ subbag [(5,1),(7,1),(2,1),(3,1),(8,1)] test_bag == True
+    print $ subbag [(5,1),(7,3),(2,1),(8,1)] test_bag == True
+    print $ subbag test_bag [(5,1),(7,3),(2,1),(8,1)] == False
+    print $ subbag test_bag test_bag == True
