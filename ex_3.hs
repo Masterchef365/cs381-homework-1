@@ -30,6 +30,25 @@ minX (Circle (x, y) r) = x - r
 minX (Rect (x, y) w h) = x
 minX (Pt (x, y)) = x
 
+-- Add two points together
+addPt :: Point -> Point -> Point
+addPt (ax, ay) (bx, by) = (ax + bx, ay + by)
+
+-- Move a shape by the coordinate
+move :: Shape -> Point -> Shape
+move (Circle a r) b = Circle (addPt a b) r
+move (Rect a w h) b = Rect (addPt a b) w h
+move (Pt a) b = Pt (addPt a b)
+
+--- Set an elements minX to zero
+zeroMinX :: Shape -> Shape
+zeroMinX (Circle (_, y) r) = Circle (r, y) r
+zeroMinX (Rect (_, y) w h) = Rect (0, y) w h
+zeroMinX (Pt (_, y)) = Pt (0, y)
+
+-- Align all figures so that their X minXs are the same  
+alignLeft :: Figure -> Figure
+alignLeft f = map zeroMinX f
 
 f = [Pt (4,4), Circle (5,5) 3, Rect (3,3) 7 2]
 
@@ -42,3 +61,9 @@ main = do
 
     print "MinX"
     print $ map minX f == [4,2,3]
+
+    print "Move"
+    print $ map (\l -> move l (1, -2)) f -- == [Pt (5,2), Circle (6,3) 3, Rect (4,1) 7 2]
+
+    print "AlignLeft"
+    print $ map minX (alignLeft f) == [0, 0, 0]
