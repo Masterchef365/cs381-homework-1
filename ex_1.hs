@@ -1,7 +1,3 @@
-import Data.List (nub,sort)
-norm :: Ord a => [a] -> [a]
-norm = sort . nub
-
 type Bag a = [(a,Int)]
 
 -- Insertion

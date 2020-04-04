@@ -1,3 +1,4 @@
-hm_1
-hm_1.hi
-hm_1.o
+ex_1
+ex_2
+*.hi
+*.o
